@@ -36,70 +36,69 @@
 
 ## PROGRAM:
     %{
- int COMMENT=0;
-%}
-identifier [a-zA-Z][a-zA-Z0-9]*
-%%
-#.* { printf("\n%s is a PREPROCESSOR DIRECTIVE",yytext);} 
+        int COMMENT=0;
+    %}
+    identifier [a-zA-Z][a-zA-Z0-9]*
+    %%
+    #.* { printf("\n%s is a PREPROCESSOR DIRECTIVE",yytext);} 
 
-int|float|char|double|while|for|do|if|break|continue|void|switch|case|long|struct|const|typedef|return|else|goto { 
-    if(!COMMENT) printf("\n\t%s is a KEYWORD",yytext);
-}
-
-"/*" { COMMENT = 1; }
-"*/" { COMMENT = 0; }
-
-{identifier}\( { if(!COMMENT) printf("\nFUNCTION -> %s",yytext); }
-
-\{ { if(!COMMENT) printf("\nBLOCK BEGINS"); }
-\} { if(!COMMENT) printf("\nBLOCK ENDS"); }
-
-{identifier}(\[[0-9]*\])? { if(!COMMENT) printf("\n%s is an IDENTIFIER",yytext); }
-
-\".*\" { if(!COMMENT) printf("\n%s is a STRING",yytext); }
-
-[0-9]+ { if(!COMMENT) printf("\n%s is a NUMBER",yytext); }
-
-\)(\;)? { if(!COMMENT) printf("\nCLOSING STATEMENT -> %s",yytext); }
-
-\( { if(!COMMENT) printf("\nOPENING PARENTHESIS"); }
-
-= { if(!COMMENT) printf("\n%s is an ASSIGNMENT OPERATOR",yytext); }
-
-\<=|\>=|\<|==|\> { if(!COMMENT) printf("\n%s is a RELATIONAL OPERATOR",yytext); }
-
-%%
-int main(int argc,char **argv)
-{
-    if (argc > 1)
-    {
-        FILE *file;
-        file = fopen(argv[1],"r"); 
-        if(!file)
-        {
-            printf("could not open %s \n",argv[1]); 
-            exit(0);
-        }
-        yyin = file;
+    int|float|char|double|while|for|do|if|break|continue|void|switch|case|long|struct|const|typedef|return|else|goto { 
+        if(!COMMENT) printf("\n\t%s is a KEYWORD",yytext);
     }
-    yylex(); 
-    printf("\n\n"); 
-    return 0;
-} 
 
-int yywrap()
-{
-    return 0;
-}
+    "/*" { COMMENT = 1; }
+    "*/" { COMMENT = 0; }
 
+    {identifier}\( { if(!COMMENT) printf("\nFUNCTION -> %s",yytext); }
+
+    \{ { if(!COMMENT) printf("\nBLOCK BEGINS"); }
+    \} { if(!COMMENT) printf("\nBLOCK ENDS"); }
+
+    {identifier}(\[[0-9]*\])? { if(!COMMENT) printf("\n%s is an IDENTIFIER",yytext); }
+
+    \".*\" { if(!COMMENT) printf("\n%s is a STRING",yytext); }
+
+    [0-9]+ { if(!COMMENT) printf("\n%s is a NUMBER",yytext); }
+
+    \)(\;)? { if(!COMMENT) printf("\nCLOSING STATEMENT -> %s",yytext); }
+
+    \( { if(!COMMENT) printf("\nOPENING PARENTHESIS"); }
+
+    = { if(!COMMENT) printf("\n%s is an ASSIGNMENT OPERATOR",yytext); }
+
+    \<=|\>=|\<|==|\> { if(!COMMENT) printf("\n%s is a RELATIONAL OPERATOR",yytext); }
+
+    %%
+    int main(int argc,char **argv)
+    {
+        if (argc > 1)
+        { 
+            FILE *file;
+            file = fopen(argv[1],"r"); 
+            if(!file)
+            {
+                printf("could not open %s \n",argv[1]); 
+                exit(0);
+            }
+            yyin = file;
+        }
+        yylex(); 
+        printf("\n\n"); 
+        return 0;
+    } 
+
+    int yywrap()
+    {
+        return 0;
+    }
 
 ## INPUT:
-#include <stdio.h>
-int main() {
-    int x = 5;
-    printf("Hello World");
-    return 0;
-}
+    #include <stdio.h>
+    int main() {
+        int x = 5;
+        printf("Hello World");
+        return 0;
+    }
 ## OUTPUT:
 
 ![Alt text](cdexp1.png)
